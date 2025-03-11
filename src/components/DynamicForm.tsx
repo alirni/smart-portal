@@ -2,6 +2,8 @@ import { FC, } from "react";
 import { Form, Input, Select, DatePicker, Radio, Button } from "antd";
 import { FormStructure, FormStructureFields, FormStructureSection, FormValues } from "../types";
 import StateSelect from "./StateSelect";
+import { submitForm } from "../api/formService";
+import { useMutation } from "@tanstack/react-query";
 
 interface DynamicFormProps {
   formStructure: FormStructure;
@@ -11,6 +13,10 @@ const DynamicForm: FC<DynamicFormProps> = ({
   formStructure,
 }) => {
   const [form] = Form.useForm();
+
+  const mutation = useMutation({
+    mutationFn: submitForm,
+  });
   
   const handleStateChange = (name: string) => (value: string) => {
     form.setFieldValue(name, value)
@@ -27,8 +33,13 @@ const DynamicForm: FC<DynamicFormProps> = ({
   
   const values = Form.useWatch([], form);
 
-  const onFinish = (values: FormValues) => {
-    console.log("Success:", values);
+  const onFinish = async (values: FormValues) => {
+    try {
+      mutation.mutate(values);
+      form.resetFields();
+    } catch (error) {
+      console.error('Form submission failed:', error);
+    }
   };
 
   return (

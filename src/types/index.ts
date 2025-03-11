@@ -32,3 +32,7 @@ export interface Visibility {
   dependsOn: string;
   value: string;
 };
+
+export interface FormValues {
+  [key: string]: unknown;
+}
