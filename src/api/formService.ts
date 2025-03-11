@@ -22,6 +22,8 @@ export const fetchForms = async () => {
 
 
 export const fetchDynamicOptions = async (endpoint: string, depend: string) => {
-  const response = await axios.get(`${API_BASE}` + endpoint + depend);
+  const response = await axios.get(`${API_BASE}${endpoint}`, {
+    params: { country: depend },
+  });
   return response.data;
 };
