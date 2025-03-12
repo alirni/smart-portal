@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from "react";
-import { TableColumnsType } from "antd";
+import { FC,  useEffect, useRef, useState } from "react";
+import { Checkbox, CheckboxOptionType, TableColumnsType } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSubmissions } from "../api/formService";
 import { TableComponent } from "./TableComponent";
@@ -9,15 +9,17 @@ const ApplicationTable: FC = () => {
     queryKey: ["submissions"],
     queryFn: fetchSubmissions,
   });
-
+  
+  const [columns, setColumns] = useState<TableColumnsType<Record<string, unknown>>>([]);
+  const [checkedList, setCheckedList] = useState<string[]>([]);
+  const options = useRef<{label: string, value: string}[]>([]);
+  
   useEffect(() => {
-    if (!isLoading && data.columns) {
+    if ((!isLoading && data.columns)) {
       prepareColumnsMeta(data.columns);
     }
   }, [data]);
-  
-  const [columns, setColumns] = useState<TableColumnsType<Record<string, unknown>>>([]);
-  
+
   const prepareColumnsMeta = (columns: string[]) => {
     setColumns(columns.map((column, index) => {
       return {
@@ -39,16 +41,41 @@ const ApplicationTable: FC = () => {
       };
     }));
   };
-  
 
+  useEffect(() => {
+    if (columns.length) {
+      setCheckedList(columns.map((column) => column.key as string));
+
+      options.current = columns.map(({ key, title }) => ({
+        label: String(title),
+        value: String(key),
+      }));
+    }
+  }, [columns]);
+
+  const newColumns = columns.map((item) => ({
+    ...item,
+    hidden: !checkedList.includes(item.key as string),
+  }));
+  
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <TableComponent
-      dataSource={data?.data}
-      columns={columns}
-      setColumns={setColumns}
-    />
+    <>
+      <Checkbox.Group
+        value={checkedList}
+        options={options.current as CheckboxOptionType[]}
+        onChange={(value) => {
+          setCheckedList(value as string[]);
+        }}
+      />
+
+      <TableComponent
+        dataSource={data?.data}
+        columns={newColumns}
+        setColumns={setColumns}
+      />
+    </>
   );
 };
 
