@@ -1,54 +1,192 @@
-# React + TypeScript + Vite
+# Smart Portal Dynamic Form
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A dynamic form component built with React, TypeScript, and Ant Design that supports conditional rendering, dynamic options, and form validation.
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Prerequisites
+- Node.js (v18 or higher)
+- npm (v9 or higher)
 
-## Expanding the ESLint configuration
+### Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone the repository:
+```bash
+git clone https://github.com/username/smart-portal.git
+cd smart-portal
+```
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start development server:
+```bash
+npm run dev
+```
+
+4. Run tests:
+```bash
+npm test
+```
+
+## 📖 API Reference
+
+### DynamicForm Component
+
+```typescript
+import { DynamicForm } from './components/DynamicForm';
+
+<DynamicForm formStructure={formStructure} />
+```
+
+### Form Structure
+
+The form configuration uses a type-safe structure:
+
+```typescript
+interface FormStructure {
+  formId: string;
+  title: string;
+  fields: FormStructureFields[];
+}
+
+interface FormStructureFields {
+  id: string;
+  type: "text" | "select" | "group";
+  label: string;
+  required?: boolean;
+  options?: string[];
+  dynamicOptions?: {
+    endpoint: string;
+    dependsOn: string;
+    method: "GET" | "POST";
+  };
+  visibility?: {
+    dependsOn: string;
+    condition: "equals";
+    value: string;
+  };
+}
+```
+
+### Example Usage
+
+```typescript
+const formConfig = {
+  formId: "userForm",
+  title: "User Information",
+  fields: [
+    {
+      id: "country",
+      type: "select",
+      label: "Country",
+      options: ["USA", "Canada"],
+      required: true
     },
-  },
-})
+    {
+      id: "state",
+      type: "select",
+      label: "State",
+      dynamicOptions: {
+        endpoint: "/api/states",
+        dependsOn: "country",
+        method: "GET"
+      },
+      visibility: {
+        dependsOn: "country",
+        condition: "equals",
+        value: "USA"
+      }
+    }
+  ]
+};
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛠 Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+### Project Structure
 ```
+src/
+├── components/
+│   ├── DynamicForm.tsx
+│   ├── DynamicField.tsx
+│   └── StateSelect.tsx
+├── api/
+│   └── formService.ts
+├── types/
+│   └── index.ts
+└── test/
+    └── setup.ts
+```
+
+### Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
+```
+
+## 🤔 Assumptions
+
+1. API Requirements:
+   - Endpoints return JSON in the format:
+   ```typescript
+   {
+     success: boolean;
+     data: {
+       options?: string[];
+       [key: string]: any;
+     };
+   }
+   ```
+   - Dynamic options endpoints accept query parameters
+
+2. Browser Support:
+   - Modern browsers (Chrome, Firefox, Safari, Edge)
+   - ES6+ features supported
+   - Local storage available for caching
+
+3. Network:
+   - Stable internet connection for dynamic options
+   - API endpoints accessible and CORS-enabled
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the project root:
+
+```bash
+VITE_API_BASE_URL=http://localhost:3000
+VITE_API_TIMEOUT=5000
+```
+
+## 📦 Dependencies
+
+- React 19.x
+- Ant Design 5.x
+- @tanstack/react-query 5.x
+- TypeScript 5.x
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch:
+```bash
+git checkout -b feature/amazing-feature
+```
+3. Commit your changes:
+```bash
+git commit -m 'Add amazing feature'
+```
+4. Push to the branch:
+```bash
+git push origin feature/amazing-feature
+```
+5. Open a Pull Request
+
+## 📝 License
+
+MIT License - see the [LICENSE](LICENSE) file for details
