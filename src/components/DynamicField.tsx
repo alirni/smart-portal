@@ -63,7 +63,7 @@ const DynamicField: FC<DynamicFieldProps> = ({
 
       {field.type === "select" && field.dynamicOptions && (
         <StateSelect
-          dependValue={`${values?.[field.dynamicOptions.dependsOn]}`}
+          dependValue={values?.[field.dynamicOptions.dependsOn] as string}
           onStateChange={handleStateChange(field.id)}
           dynamicOptions={field.dynamicOptions}
         />

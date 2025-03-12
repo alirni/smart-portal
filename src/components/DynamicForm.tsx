@@ -1,4 +1,4 @@
-import { FC, } from "react";
+import { FC, Fragment, } from "react";
 import { Form, Button } from "antd";
 import { FormStructure, FormStructureFields, FormValues } from "../types";
 import { submitForm } from "../api/formService";
@@ -53,14 +53,14 @@ const DynamicForm: FC<DynamicFormProps> = ({
               if (!isFieldVisible(field)) return null;
 
               return (
-                <>
+                <Fragment key={field.id}>
                   <h3>{section.label}</h3>
                   <DynamicField
                     field={field}
                     handleStateChange={handleStateChange}
                     values={values}
                   />
-                </>
+                </Fragment>
               );
             })
           ) : (

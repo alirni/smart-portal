@@ -1,7 +1,8 @@
 import { FC, useEffect, useState } from "react";
-import { Table, TableColumnsType } from "antd";
+import { TableColumnsType } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSubmissions } from "../api/formService";
+import { TableComponent } from "./TableComponent";
 
 const ApplicationTable: FC = () => {
   const { data, isLoading } = useQuery({
@@ -18,11 +19,13 @@ const ApplicationTable: FC = () => {
   const [columns, setColumns] = useState<TableColumnsType<Record<string, unknown>>>([]);
   
   const prepareColumnsMeta = (columns: string[]) => {
-    setColumns(columns.map((column) => {
+    setColumns(columns.map((column, index) => {
       return {
         title: column,
         dataIndex: column,
-        key: column,
+        key: `${index}`,
+        onHeaderCell: () => ({ id: `${index}` }),
+        onCell: () => ({ id: `${index}` }),
         ...(column.toLowerCase() === "age"
           ? {
               sorter: (a, b) => {
@@ -41,11 +44,10 @@ const ApplicationTable: FC = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <Table
+    <TableComponent
       dataSource={data?.data}
       columns={columns}
-      rowKey="id"
-      showSorterTooltip={{ target: "sorter-icon" }}
+      setColumns={setColumns}
     />
   );
 };

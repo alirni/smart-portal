@@ -4,8 +4,8 @@ import { fetchDynamicOptions } from "../api/formService"; // Assume this functio
 import { DynamicOptions } from "../types";
 
 interface StateSelectProps {
-  dependValue: string;
-  onStateChange: (value: string) => void; // Function to handle the selected state change
+  dependValue?: string;
+  onStateChange: (value: string) => void;
   dynamicOptions: DynamicOptions;
 }
 
