@@ -19,11 +19,11 @@ const items = [
 const App: FC = () => {
   return (
     <Router>
-      <Layout>
+      <Layout style={{ height: "100%" }}>
         <Header>
           <Menu theme="dark" mode="horizontal" items={items} />
         </Header>
-        <Content style={{ padding: "20px" }}>
+        <Content style={{ padding: "20px", height: "100%", overflow: 'auto' }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/form/:formId" element={<FormPage />} />

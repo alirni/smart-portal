@@ -18,10 +18,12 @@ export const Home: FC = () => {
   return (
     <div
       style={{
-        display: "grid",
+        display: "flex",
+        flexDirection: "column",
         gap: "20px",
         maxWidth: "600px",
         margin: "auto",
+        height: "100%",
       }}
     >
       {forms.map((form: FormStructure) => (
