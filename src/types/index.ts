@@ -1,14 +1,7 @@
 export interface FormStructure {
   formId: string;
-  fields: FormStructureSection[];
-  title: string;
-}
-
-export interface FormStructureSection {
   fields: FormStructureFields[];
-  id: string;
-  label: string;
-  type: string;
+  title: string;
 }
 
 export interface FormStructureFields {
@@ -19,6 +12,7 @@ export interface FormStructureFields {
   options?: string[];
   dynamicOptions?: DynamicOptions;
   visibility?: Visibility;
+  fields?: FormStructureFields[];
 }
 
 export interface DynamicOptions {

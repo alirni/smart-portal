@@ -1,9 +1,9 @@
 import { FC, } from "react";
-import { Form, Input, Select, DatePicker, Radio, Button } from "antd";
-import { FormStructure, FormStructureFields, FormStructureSection, FormValues } from "../types";
-import StateSelect from "./StateSelect";
+import { Form, Button } from "antd";
+import { FormStructure, FormStructureFields, FormValues } from "../types";
 import { submitForm } from "../api/formService";
 import { useMutation } from "@tanstack/react-query";
+import DynamicField from "./DynamicField";
 
 interface DynamicFormProps {
   formStructure: FormStructure;
@@ -35,6 +35,8 @@ const DynamicForm: FC<DynamicFormProps> = ({
 
   const onFinish = async (values: FormValues) => {
     try {
+      await form.validateFields();
+
       mutation.mutate(values);
       form.resetFields();
     } catch (error) {
@@ -44,62 +46,30 @@ const DynamicForm: FC<DynamicFormProps> = ({
 
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
-      {formStructure.fields.map((section: FormStructureSection) => (
+      {formStructure.fields.map((section: FormStructureFields) => (
         <div key={section.id}>
-          <h3>{section.label}</h3>
-          {section.type === "group"
-            ? section.fields.map((field: FormStructureFields) => {
-                if (!isFieldVisible(field)) return null;
+          {section.type === "group" ? (
+            section.fields?.map((field: FormStructureFields) => {
+              if (!isFieldVisible(field)) return null;
 
-                return (
-                  <Form.Item
-                    key={field.id}
-                    label={field.label}
-                    name={field.id}
-                    rules={
-                      field.required
-                        ? [
-                            {
-                              required: true,
-                              message: "This field is required",
-                            },
-                          ]
-                        : []
-                    }
-                  >
-                    {field.type === "text" && <Input />}
-                    {field.type === "date" && <DatePicker />}
-                    {field.type === "number" && <Input type="number" />}
-                    {field.type === "radio" && (
-                      <Radio.Group>
-                        {field.options?.map((option: string) => (
-                          <Radio key={option} value={option}>
-                            {option}
-                          </Radio>
-                        ))}
-                      </Radio.Group>
-                    )}
-                    {field.type === "select" && !field.dynamicOptions && (
-                      <Select>
-                        {field.options?.map((option: string) => (
-                          <Select.Option key={option} value={option}>
-                            {option}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    )}
-
-                    {field.type === "select" && field.dynamicOptions && (
-                      <StateSelect
-                        dependValue={values?.[field.dynamicOptions.dependsOn]}
-                        onStateChange={handleStateChange(field.id)}
-                        dynamicOptions={field.dynamicOptions}
-                      />
-                    )}
-                  </Form.Item>
-                );
-              })
-            : null}
+              return (
+                <>
+                  <h3>{section.label}</h3>
+                  <DynamicField
+                    field={field}
+                    handleStateChange={handleStateChange}
+                    values={values}
+                  />
+                </>
+              );
+            })
+          ) : (
+            <DynamicField
+              field={section}
+              handleStateChange={handleStateChange}
+              values={values}
+            />
+          )}
         </div>
       ))}
 
