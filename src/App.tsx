@@ -21,9 +21,14 @@ const App: FC = () => {
     <Router>
       <Layout style={{ height: "100%" }}>
         <Header>
-          <Menu theme="dark" mode="horizontal" items={items} />
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            items={items}
+            defaultSelectedKeys={["home"]}
+          />
         </Header>
-        <Content style={{ padding: "20px", height: "100%", overflow: 'auto' }}>
+        <Content style={{ padding: "20px", height: "100%", overflow: "auto" }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/form/:formId" element={<FormPage />} />

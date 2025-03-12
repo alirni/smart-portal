@@ -1,9 +1,10 @@
 import axios from "axios";
+import { FormValues } from "../types";
 
 const API_BASE = "https://assignment.devotel.io";
 
 // Submit form data
-export const submitForm = async (data: any) => {
+export const submitForm = async (data: FormValues) => {
   await axios.post(`${API_BASE}/api/insurance/forms/submit`, data);
 };
 
