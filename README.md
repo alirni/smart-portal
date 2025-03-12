@@ -2,6 +2,8 @@
 
 A dynamic form component built with React, TypeScript, and Ant Design that supports conditional rendering, dynamic options, and form validation.
 
+### [Demo on Vercel](https://smart-portal-bice.vercel.app/)
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -24,11 +26,6 @@ npm install
 3. Start development server:
 ```bash
 npm run dev
-```
-
-4. Run tests:
-```bash
-npm test
 ```
 
 ## 📖 API Reference
@@ -116,9 +113,7 @@ src/
 ├── api/
 │   └── formService.ts
 ├── types/
-│   └── index.ts
-└── test/
-    └── setup.ts
+    └── index.ts
 ```
 
 ### Available Scripts
@@ -159,8 +154,7 @@ npm run lint         # Run ESLint
 Create a `.env` file in the project root:
 
 ```bash
-VITE_API_BASE_URL=http://localhost:3000
-VITE_API_TIMEOUT=5000
+VITE_API_BASE_URL=
 ```
 
 ## 📦 Dependencies
